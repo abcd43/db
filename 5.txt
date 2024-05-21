@@ -1,0 +1,174 @@
+DBMS_5
+Problem Statement:-
+Design at least 10 SQL queries for suitable database application using SQL DML statements:
+Demonstrate all types of Joins, Sub-Query and View.
+Instruction: Use your own designed schema for the queries.
+
+CREATE TABLE Donor (
+  donor_id NUMBER(10) PRIMARY KEY,
+  donor_name VARCHAR2(50),
+  blood_type VARCHAR2(5),
+  last_donation_date DATE
+);
+
+CREATE TABLE Patients (
+  patient_id NUMBER(10) PRIMARY KEY,
+  patient_name VARCHAR2(50),
+  blood_type_needed VARCHAR2(5),
+  admission_date DATE
+);
+
+CREATE TABLE Blood_Bank (
+  blood_bank_id NUMBER(10) PRIMARY KEY,
+  blood_bank_name VARCHAR2(50),
+  available_blood_types VARCHAR2(5)
+);
+
+CREATE TABLE Hospital (
+  hospital_id NUMBER(10) PRIMARY KEY,
+  hospital_name VARCHAR2(50)
+);
+
+-- Sample data for the tables
+INSERT INTO Donor VALUES (1, 'Akash', 'A+', TO_DATE('2022-01-01', 'YYYY-MM-DD'));
+INSERT INTO Donor VALUES (2, 'Kunal', 'AB-', TO_DATE('2023-01-01', 'YYYY-MM-DD'));
+INSERT INTO Donor VALUES (3, 'Sachin', 'A+', TO_DATE('2021-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO Patients VALUES (1, 'Ajay', 'A+', TO_DATE('2023-01-01', 'YYYY-MM-DD'));
+INSERT INTO Patients VALUES (2, 'Mangesh', 'B+', TO_DATE('2023-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO Blood_Bank VALUES (1, 'Spandan Blood Bank', 'A+');
+INSERT INTO Blood_Bank VALUES (2, 'Life Care Blood Bank', 'B+');
+INSERT INTO Blood_Bank VALUES (3, 'Lotus Blood Bank', 'AB-');
+
+INSERT INTO Hospital VALUES (1, 'Divya Hospital');
+INSERT INTO Hospital VALUES (2, 'Life Care Hospital');
+INSERT INTO Hospital VALUES (3, 'Apollo Hospital');
+INSERT INTO Hospital VALUES (4, 'Lotus Hospital');
+
+Inner Join:
+SELECT p.patient_name, b.blood_bank_name
+FROM Patients p
+INNER JOIN Blood_Bank b ON p.blood_type_needed = b.available_blood_types;
+
+patient_name | blood_bank_name
+--------------------------------------------------------
+Ajay Patil | Spandan Blood Bank
+Mangesh Ghadwaje | Life Care Blood Bank
+
+Left Join:
+
+SELECT d.donor_name, p.patient_name
+FROM Donor d
+LEFT JOIN Patients p ON d.blood_type = p.blood_type_needed;
+
+Donor_name | patient_name
+-----------------------------------------
+Sachin | Ajay Patil
+Akash |
+Kunal | Mangesh Ghadwaje
+
+Right Join:
+
+SELECT b.blood_bank_name, p.patient_name
+FROM Blood_Bank b
+RIGHT JOIN Patients p ON b.available_blood_types = p.blood_type_needed;
+
+blood_bank_name | patient_name
+-------------------------------
+Spandan Blood Bank | Ajay Patil
+Life Care Blood Bank | Mangesh Ghadwaje
+ | Sachin Kumar
+
+Full Outer Join:
+
+SELECT *
+FROM Donor d
+FULL OUTER JOIN Patients p ON d.blood_type = p.blood_type_needed;
+
+donor_name | blood_type | patient_name | blood_type_needed
+-------------------------------------------------------------------------------
+Sachin | A+ | Ajay Patil | A+
+Akash | AB- | |
+Kunal | O- | Sachin Kumar | B+
+
+Subquery:
+
+SELECT donor_name
+FROM Donor
+WHERE last_donation_date = (
+ SELECT MAX(last_donation_date)
+ FROM Donor
+);
+
+donor_name
+----------
+Akash
+Kunal
+
+View:
+
+CREATE VIEW Blood_Donors AS
+SELECT donor_id, donor_name, blood_type
+FROM Donor
+WHERE last_donation_date >= '2024-01-01';
+
+Blood_Donors
+donor_id | donor_name | blood_type
+-----------------------------------------------
+2 | Akash | AB3 | Kunal | O-
+
+Aggregate Function:
+
+SELECT blood_type, COUNT(*)
+FROM Donor
+GROUP BY blood_type;
+
+blood_type | donor_count
+------------------------
+A+ | 2
+AB- | 3
+O- | 2
+
+Conditional Join:
+
+SELECT b.blood_bank_name, p.patient_name
+FROM Blood_Bank b
+LEFT JOIN Patients p ON b.available_blood_types = p.blood_type_needed
+WHERE p.admission_date >= '2024-01-01';
+
+Blood_bank_name | patient_name
+--------------------------------------------------
+Spandan Blood Bank | Ajay Patil
+Life Care Blood Bank |
+Lotus Blood Bank |
+
+Nested Join:
+
+SELECT *
+FROM (
+ SELECT donor_name, blood_type
+ FROM Donor
+) AS d
+JOIN (
+ SELECT patient_name, blood_type_needed
+ FROM Patients
+) AS p ON d.blood_type = p.blood_type_needed;
+
+donor_name | blood_type | patient_name | blood_type_needed
+-----------------------------------------------------------------------------------
+Akash | A+ | Ajay | A+
+Kunal | AB- | |
+
+Cross Join (Cartesian Product):
+
+SELECT d.donor_name, h.hospital_name
+FROM Donor d
+CROSS JOIN Hospital h;
+
+donor_name | hospital_name
+---------------------------
+Akash | Divya Hospital
+Kunal | Life Care Hospital
+Sachin | Apollo Hospital
+Khushal | Lotus Hospital 

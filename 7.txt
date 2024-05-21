@@ -1,0 +1,45 @@
+DBMS_7
+Problem Statement:-
+Write a PL/SQL block for following requirement and handle the exceptions.
+Roll no. of student will be entered by user. Attendance of roll no. entered by user will be checked in
+Student table. If attendance is less than 75%then display the message “Term not granted” and set the
+status in Student table as “D”. Otherwise display message “Term granted” and set the status in Student
+table as “ND”
+Program :-
+
+create table student4(rollno int primary key,name varchar(10),attend int,status varchar(10));
+insert into student4(rollno,name,attend) values(1,'Mangesh',75);
+insert into student4(rollno,name,attend) values(2,'Dhiraj',70);
+insert into student4(rollno,name,attend) values(3,'Saurabh',80);
+insert into student4(rollno,name,attend) values(4,'Sachin',100);
+insert into student4(rollno,name,attend) values(5,'Ajay',65);
+select * from student4;
+variable rollno number;
+
+
+DECLARE
+  v_rollno student4.rollno%TYPE;
+  v_name student4.name%TYPE;
+  v_attend student4.attend%TYPE;
+  v_status student4.status%TYPE;
+BEGIN
+  v_rollno := 1;
+  select attend, status into v_attend, v_status from student4 where rollno = v_rollno;
+  if v_attend < 75 then
+    DBMS_OUTPUT.PUT_LINE('Term not granted');
+    v_status := 'D';
+  else
+    DBMS_OUTPUT.PUT_LINE('Term granted');
+    v_status := 'ND';
+  end if;
+  UPDATE student4 SET status = v_status WHERE rollno = v_rollno;
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Status Updated Sucessfully');
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Roll number not found');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An error occured:' || SQLERRM);
+    ROLLBACK;
+END;
+/

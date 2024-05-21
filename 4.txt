@@ -1,0 +1,96 @@
+DBMS_4
+Problem Statement: Implement Group By, Having clause and Order by clause with suitable
+example. Students are advised to continue the schema used by them in the assignment No.1 (ER
+Diagram)
+SQL DML statements
+
+CREATE TABLE Donor (
+  donor_id NUMBER(10) PRIMARY KEY,
+  name VARCHAR2(50),
+  age NUMBER(3),
+  blood_type VARCHAR2(5)
+);
+
+CREATE TABLE Patient (
+  patient_id NUMBER(10) PRIMARY KEY,
+  patient_name VARCHAR2(50),
+  age NUMBER(3),
+  blood_group VARCHAR2(5),
+  h_id NUMBER(10)
+);
+
+CREATE TABLE Blood_Bank (
+  blood_bank_id NUMBER(10) PRIMARY KEY,
+  blood_bank_name VARCHAR2(50),
+  quantity NUMBER(10)
+);
+
+-- Sample data for the tables
+INSERT INTO Donor VALUES (1, 'Sanjay Sharma', 30, 'A+');
+INSERT INTO Donor VALUES (2, 'Neha Patel', 21, 'B-');
+INSERT INTO Donor VALUES (3, 'Rajesh Kumar', 34, 'AB-');
+INSERT INTO Donor VALUES (4, 'Manish Gupta', 28, 'O+');
+
+INSERT INTO Patient VALUES (1, 'Ajay Patil', 40, 'A+', 1);
+INSERT INTO Patient VALUES (2, 'Vednat Bhosale', 30, 'B-', 2);
+INSERT INTO Patient VALUES (3, 'Sachin Pandit', 50, 'AB+', 3);
+INSERT INTO Patient VALUES (4, 'Akash Gore', 35, 'A+', 1);
+INSERT INTO Patient VALUES (5, 'Dhiraj Aher', 38, 'AB+', 3);
+
+INSERT INTO Blood_Bank VALUES (1, 'Spandan Blood Bank', 1500);
+INSERT INTO Blood_Bank VALUES (2, 'Life Care Blood Bank', 800);
+INSERT INTO Blood_Bank VALUES (3, 'Lotus Blood Bank', 2000);
+
+a) Gruop By
+i)SELECT Blood_Type AS Blood_Group, COUNT(*) AS DonorCount
+FROM donor
+GROUP BY Blood_Type;
+| Blood_Group | DonorCount |
+|-------------|------------|
+| A+ | 25 |
+| B+ | 30 |
+| AB- | 15 |
+| O+ | 20 |
+| O- | 10 |
+
+ii) SELECT H_ID AS h_id, COUNT(*) AS Total_Patients
+FROM patient
+GROUP BY H_ID;
+| h_id | Total_Patients |
+|------|----------------|
+| 1 | 25 |
+| 2 | 30 |
+| 3 | 15 |
+| 4 | 20 |
+
+b) Having Clause
+i) SELECT BloodBank_ID, SUM(Quantity) AS TotalBlood
+FROM blood_bank
+GROUP BY BloodBank_ID
+HAVING SUM(Quantity) > 1000;
+| BloodBank_ID | TotalBlood |
+|--------------|------------|
+| 1 | 1500 |
+| 3 | 2000 |
+
+c) Order By
+i) SELECT *
+FROM donor
+ORDER BY Age DESC;
+| Donor_ID | Name | Age | Blood_Type |
+|----------|---------------------- -|-----|-------------------|
+| 4 | Rajesh Kumar | 34 | AB- |
+| 1 | Sanjay Sharma | 30 | A+ |
+| 5 | Manish Gupta | 28 | O+ |
+| 2 | Neha Patel | 21 | B- |
+
+ii) SELECT *
+FROM patient
+ORDER BY Blood_Group ASC, Age DESC;
+| Patient_ID | Patient_Name | Age | Blood_Group |
+|----------------|----------------------|------|---------------------|
+| 1 | Ajay Patil | 40 | A+ |
+| 4 | Akash Gore | 35 | A+ |
+| 3 | Sachin Pandit | 50 | AB+ |
+| 5 | Dhiraj Aher | 38 | AB+ |
+| 2 | Vednat Bhosale| 30 | B- |

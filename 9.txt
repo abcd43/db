@@ -1,0 +1,52 @@
+DBMS_9
+Write an Explicit cursor to
+i. Display employee name,address,salary along with age category(young
+or old)
+ii. Display count of young and old employees.
+
+CREATE TABLE employee (
+employee_id NUMBER,
+employee_name VARCHAR2(100),
+address VARCHAR2(200),
+salary
+NUMBER, age
+NUMBER
+);
+
+insert into employee values(111,'Sumedh','Pune',15000,21);
+insert into employee values(222,'Saurabh','Mumbai',5000,22);
+insert into employee values(333,'Nikita','Banglore',5300,23);
+insert into employee values(444,'Shraddha','Nagpur',52300,24);
+insert into employee values(555,'Yash','Pune',10000,21);
+insert into employee values(666,'Ankita','Akola',8000,22);
+
+select *from employee;
+
+DECLARE
+  CURSOR employee_cursor IS
+    SELECT employee_name, address, salary, 
+           CASE WHEN age < 24 THEN 'young'
+                ELSE 'old'
+           END AS age_category
+      FROM employee;
+  young_count NUMBER := 0;
+  old_count NUMBER := 0;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Employee Details:');
+  FOR emp IN employee_cursor
+  LOOP
+    DBMS_OUTPUT.PUT_LINE('Name:' || emp.employee_name);
+    DBMS_OUTPUT.PUT_LINE('Address:' || emp.address);
+    DBMS_OUTPUT.PUT_LINE('Salary:' || emp.salary);
+    DBMS_OUTPUT.PUT_LINE('Age Category:' || emp.age_category);
+    DBMS_OUTPUT.PUT_LINE('');
+    IF emp.age_category = 'young' THEN
+      young_count := young_count + 1;
+    ELSE
+      old_count := old_count + 1;
+    END IF;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Young Employees: ' || young_count);
+  DBMS_OUTPUT.PUT_LINE('Old Employees: ' || old_count);
+END;
+/

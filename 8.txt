@@ -1,0 +1,39 @@
+DBMS_8
+Problem Statement:
+Study & Implementation of SQL Cursors. Students are expected to use their own relational
+databases/ schema created for earlier lab assignments to implement cursor.
+OR
+Consider following Employee schema.
+Employee(ID, Name, Age, Address, Salary)
+Write a PL/SQL block to increase salary of those employees having minimum salary by 5000.
+Display count of employees who got hike in salary. (use implicit cursor)
+QUERY:
+
+create table employee (ID int primary key, Name varchar(30), Age int, Address varchar(30), salary int);
+insert into employee values(1,'Ajay',23,'Nashik',90000);
+insert into employee values(2,'Dhiraj',22,'Mumbai',74000);
+insert into employee values(3,'Vednat',21,'Pune',2006);
+insert into employee values(4,'Sachin',23,'Banglore',4000);
+insert into employee values(5,'Mangesh',22,'Nagpur',50000);
+insert into employee values(6,'shubham',21,'Amravati',95000);
+insert into employee values(7,'Omkar',23,'Akola',43400);
+select * from employee;
+DECLARE
+min_salary NUMBER;
+hike_count INTEGER := 0;
+BEGIN
+FOR emp IN (SELECT ID, salary
+FROM employee
+WHERE salary<10000)
+LOOP
+UPDATE employee
+SET salary = emp.salary + 5000
+WHERE ID = emp.ID;
+hike_count := hike_count + 1;
+END LOOP;
+DBMS_OUTPUT.PUT_LINE('Number of employees who received a hike:' ||
+hike_count);
+END;
+/
+
+select * from employee; 

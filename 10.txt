@@ -1,0 +1,59 @@
+DBMS_10
+Statement:
+Write a Pl/SQL block to calculate gross salary on basis of basic salary. If DA is 40% of basic ,HRA is 20% of
+basic and PF deduction is 12% of basic salary.
+Gross salary=Basic Salary+DA+HRA-PF
+Accept basic salary from user and pass it to function, function will return gross salary.
+
+Create the emp10 table
+CREATE TABLE emp10 (
+  ID INT PRIMARY KEY,
+  Name VARCHAR(30),
+   basic_salary INT
+);
+
+-- Insert data into the emp10 table
+INSERT INTO emp10 VALUES (1, 'Ajay', 90000);
+INSERT INTO emp10 VALUES (2, 'Dhiraj', 74000);
+INSERT INTO emp10 VALUES (3, 'Vednat', 20000);
+INSERT INTO emp10 VALUES (4, 'Sachin', 40000);
+INSERT INTO emp10 VALUES (5, 'Mangesh', 50000);
+
+DECLARE
+    basic_salary emp10.basic_salary%TYPE;
+    da NUMBER;
+    hra NUMBER;
+    pf NUMBER;
+    gross_salary NUMBER;
+    emp_name emp10.Name%TYPE;
+    input_employee_id emp10.ID%TYPE := 1;
+
+    FUNCTION calculate_gross_salary(p_basic_salary NUMBER)
+    RETURN NUMBER IS
+    BEGIN
+        da := p_basic_salary * 0.4;
+        hra := p_basic_salary * 0.2;
+        pf := p_basic_salary * 0.12;
+        gross_salary := p_basic_salary + da + hra - pf;
+        RETURN gross_salary;
+    END calculate_gross_salary;
+BEGIN
+    SELECT Name, basic_salary INTO emp_name, basic_salary
+    FROM emp10
+    WHERE ID = input_employee_id;
+
+    gross_salary := calculate_gross_salary(basic_salary);
+
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || input_employee_id);
+    DBMS_OUTPUT.PUT_LINE('Employee Name: ' || emp_name);
+    DBMS_OUTPUT.PUT_LINE('Basic salary : ' || basic_salary);
+    DBMS_OUTPUT.PUT_LINE('Dearness Allowance : ' || da);
+    DBMS_OUTPUT.PUT_LINE('House Rent Allowance : ' || hra);
+    DBMS_OUTPUT.PUT_LINE('Provident Fund : ' || pf);
+    DBMS_OUTPUT.PUT_LINE('Calculate Gross salary : ' ||' = ' || basic_salary || ' + ' || da || ' + ' || hra || ' - ' || pf);
+	DBMS_OUTPUT.PUT_LINE('Gross salary : ' || gross_salary );
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Employee not found.');
+END;
+/

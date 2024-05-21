@@ -1,0 +1,79 @@
+DBMS_2
+Problem Statement:Implement SQLDDL statements which demonstrate the use of SQL objects
+such as Table, View, Index, Sequence, different constraints etc with
+suitable example
+a) Implement SQL DDL statements to demonstrate the creation of SQL objects
+such as Table DONOR having attributes such DonorID , Name , BloodType ,ContactInfo ,.Age Gender
+Solution:
+
+CREATE TABLE Donor (
+ DonorID INT PRIMARY KEY,
+ Name VARCHAR(100),
+ BloodType VARCHAR(5),
+ ContactInfo VARCHAR(100),
+ Age INT,
+ Gender VARCHAR(10)
+);
+
+b) VIEW
+CREATE VIEW DonorView AS
+SELECT donor_id, name, blood_type, age, contact_info
+FROM Donor;
+
+c) INDEX
+CREATE INDEX donor_id_index ON Donor(donor_id);
+
+d) SEQUENCE
+CREATE SEQUENCE donor_id_sequence
+START WITH 1
+INCREMENT BY 1;
+
+e) Constraints
+CREATE TABLE Donor (
+ donor_id INT PRIMARY KEY,
+ name VARCHAR(100) NOT NULL,
+ blood_type VARCHAR(5) NOT NULL,
+ age INT,
+ contact_info VARCHAR(255),
+ CONSTRAINT chk_age CHECK (age >= 18),
+ CONSTRAINT chk_blood_type CHECK (blood_type IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+ CONSTRAINT donor_name_unique UNIQUE (name)
+);
+
+DML Statements
+a) INSERT
+INSERT INTO Donor (DonorID, Name, BloodType, ContactInfo, Age, Gender)
+VALUES (1, 'Prashant Dasnur', 'O+', '9021648546', 22, 'Male');
+
+b) SELECT
+Retrieving all columns
+
+i) SELECT donor_id, name, blood_type, age, contact_info
+FROM Donor;
+To filter result based on certain conditions
+
+ii) SELECT donor_id, name
+FROM Donor
+WHERE age > 25;
+
+c) UPDATE
+i)
+UPDATE Donor
+SET age = 35
+WHERE donor_id = 1;
+
+ii) UPDATE using Conversion function
+-- Update the age column in the Donor table by increasing it by 10%
+UPDATE Donor
+SET age = CAST(age * 1.1 AS INT);
+
+d)DELETE
+i) DELETE using Aggregate function:
+-- Delete donors whose age is below the average age
+DELETE FROM Donor
+WHERE age < (SELECT AVG(age) FROM Donor);
+
+ii)DELETE using Character function
+-- Delete donors whose names start with the letter 'P'
+DELETE FROM Donor
+WHERE LEFT(donor_name, 1) = 'P';

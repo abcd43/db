@@ -1,0 +1,58 @@
+DBMS_13
+Problem Statement:
+Design and Develop MongoDB Queries using aggregation and indexing with suitable
+example using MongoDB
+. "donors" collection represents a single donor and contains fields like donor_id, name,
+blood_type, donation_date, and contact_info.
+
+● Create Database: If the database doesn't exist, you can create it by using a command
+like ‘use blood_bank’
+
+● Insert Data: Insert donor information into the "donors" collection using the insertMany()
+method.
+
+db.donors.insertMany([
+ { donor_id: 1, name: "Ramesh Patel", blood_type: "O+", donation_date: ISODate("2024-05-
+01"), contact_info: { phone: "123-456-7890", email: "rameshp@gmail.com" }, age: 30 },
+ { donor_id: 2, name: "Priya Sharma", blood_type: "A-", donation_date: ISODate("2024-04-15"),
+contact_info: { phone: "987-654-3210", email: "priya21@gmail.com" }, age: 25 },
+ { donor_id: 3, name: "Suresh Gupta", blood_type: "B+", donation_date: ISODate("2024-05-10"),
+contact_info: { phone: "111-222-3333", email: "suresh45@gmail.com" }, age: 40 },
+{ donor_id: 4, name: "Anjali Singh", blood_type: "AB+", donation_date: ISODate("2024-04-20"),
+contact_info: { phone: "444-555-6666", email: "anjali78@gmail.com" }, age: 35 },
+{ donor_id: 5, name: "Divya Kumar", blood_type: "O-", donation_date: ISODate("2024-05-05"),
+contact_info: { phone: "777-888-9999", email: "divya31@gmail.com" }, age: 28 }
+]);
+
+● Display data from the "donors" collection
+>>db.donors.find().pretty();
+
+1.Calculate the total number of donors registered in the system:
+>>
+db.donors.countDocuments({});
+>>
+5
+
+2.Find donors with a specific blood type (e.g., "O+") and within a certain age range:
+
+>>
+db.donors.find({
+ blood_type: "O+",
+ age: { $gte: 18, $lte: 60 }
+}).pretty();
+
+
+
+3.Determine the count of donors for each blood type:
+>> db.donors.aggregate([
+ {
+ $group: {
+ _id: "$blood_type",
+ totalDonors: { $sum: 1 }
+ }
+ }
+]);
+
+4.Create an index on the "blood_type" field for faster query performance:
+>> db.donors.createIndex({ blood_type: 1 });
+

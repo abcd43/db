@@ -1,0 +1,72 @@
+DBMS_6
+Study & Implementation of PL/SQL (Any two)
+(A) Create table student (Rollno, name, percentage). Insert suitable records in the table.
+Write a PL/SQL block of code for the following requirements: -
+i) Accept rollno from the user.
+ii) Retrieve name and percentage of the students with rollno given by the user.
+iii) calculate grade of the student as per following conditions:
+Percentage>=80 then grade=A+
+Percentage>=70 and <80 then grade=A
+Percentage>=60 and <70 then grade=B+
+Percentage>=50 and <60 then grade=B
+Percentage>=40 and <50 then grade=C
+Percentage below 40 then grade = fail
+iii) print rollno, name, percentage and grade of student
+use appropriate control structure and exception handling.
+>>>
+
+CCreate table Student(
+roll_no int PRIMARY KEY,
+name varchar2(20),
+percent float
+);
+insert into Student values(1, 'Manish', 88.34);
+insert into Student values(2, 'Shubham', 83.94);
+insert into Student values(3, 'Vaibhav', 73.42);
+insert into Student values(4, 'Shivam', 93.44);
+insert into Student values(5, 'Gautam', 78.24);
+insert into Student values(6, 'Aniket', 93.93);
+insert into Student values(7, 'Sujal', 81.37);
+insert into Student values(8, 'Yashodip', 98.94);
+insert into Student values(9, 'Santosh', 83.14);
+insert into Student values(10, 'Nilesh', 78.34);
+
+Select * From Student;
+
+-- Accept rollno from the user
+DECLARE
+  v_rollno Student.roll_no%TYPE;
+  v_name Student.name%TYPE;
+  v_percent Student.percent%TYPE;
+  v_grade VARCHAR2(10);
+BEGIN
+  v_rollno:= 3; -
+  SELECT name, percent INTO v_name, v_percent
+  FROM Student
+  WHERE roll_no = v_rollno;
+
+  -- Calculate the grade based on the percentage
+  IF v_percent >= 80 THEN
+    v_grade := 'A+';
+  ELSIF v_percent >= 70 AND v_percent < 80 THEN
+    v_grade := 'A';
+  ELSIF v_percent >= 60 AND v_percent < 70 THEN
+    v_grade := 'B+';
+  ELSIF v_percent >= 50 AND v_percent < 60 THEN
+    v_grade := 'B';
+  ELSIF v_percent >= 40 AND v_percent < 50 THEN
+    v_grade := 'C';
+  ELSE
+    v_grade := 'Fail';
+  END IF;
+  -- Print rollno, name, percentage, and grade of the student
+
+  DBMS_OUTPUT.PUT_LINE('Rollno: ' || v_rollno);
+  DBMS_OUTPUT.PUT_LINE('Name: ' || v_name);
+  DBMS_OUTPUT.PUT_LINE('Percentage: ' || v_percent);
+  DBMS_OUTPUT.PUT_LINE('Grade: ' || v_grade);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Student with Rollno ' || v_rollno || ' does not exist.');
+END;
+/

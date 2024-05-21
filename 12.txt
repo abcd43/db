@@ -1,0 +1,38 @@
+DBMS_12
+Problem Statement:
+(B) Create database in MongoDB , create a collection named student, Insert 5 records with field
+(Student_ Id, Name, Address, contact_no , subjects and percentage).
+1) Insert 1 more document in collection with additional field of hobbies.
+2) Display information of all students
+3) Display details of students who have secured more than 70 percentage
+4) Update percentage of student whose Student _ Id is 5
+5) Delete document of ‘Rohan’ from database
+6) Demonstrate use of Save() Method
+
+B) Inserting 5 Entries:
+>>db.student.insert({sid:22,sname:"Dhruv",address:"Dhule",contact:8989897676,subject:"DSA
+",percentage:88})
+>>db.students.insertOne({sid:23,sname:"Disha",address:"DBMS",contact:8989466676,subje
+ct:"DBMS",percentage:90})
+>>db.students.insertMany([{sid:24,sname:"Vaibhav",address:"Nashik",contact:8987776676,s
+ubject:"AWT",percentage:85},{sid:25,sname:"Yashodip",address:"Dhule",contact:8989545
+467,subject:"MATH",percentage:85},{sid:26,sname:"Gautam",address:"Jalgaon",contact:7
+676758495,subject:"AI",percentage:86}])
+
+1) Inserting one more document with extra field:
+>>db.students.insertOne({sno:30,sname:"Manish",address:"Jalgaon",contact:9898432321,subjec
+t:"ARVR",percentage:80,hobbies:"Reading"})
+
+2) Display Information:
+>>db.students.find().pretty();
+
+3) Display Information of students who have secured more than 85 percentage:
+>>db.students.find({percentage:{$gt:86}}).pretty();
+
+4) Update Information of students whose student Id is 26:
+>>db.student.updateOne({Student_Id:26}, {$set: {percentage:87 }});
+
+5) Delete Document of ‘Disha’ from database:
+
+6) save() method:
+>>db.students.save({sno:23,sname:"Disha"})

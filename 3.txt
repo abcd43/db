@@ -1,0 +1,123 @@
+DBMS_3
+Problem Statement:Write at least 10 SQL queries on the suitable database application using SQL DML
+statements: Insert, Select, Update, Delete with operators (Arithmetic Operators, Logical Operators,
+Comparison Operator, Special Operator), functions (Number function, Aggregate Function, Character
+Function, Conversion Function, Date Function)
+suitable example
+SQL DML statements
+
+CREATE TABLE Donor (
+  donor_id NUMBER(10) PRIMARY KEY,
+  name VARCHAR2(50),
+  age NUMBER(3),
+  blood_type VARCHAR2(5),
+  last_donation DATE
+);
+
+CREATE TABLE Blood_Bank (
+  blood_bank_id NUMBER(10) PRIMARY KEY,
+  location VARCHAR2(50),
+  quantity NUMBER(10)
+);
+
+CREATE TABLE Patient (
+  patient_id NUMBER(10) PRIMARY KEY,
+  patient_name VARCHAR2(50),
+  age NUMBER(3),
+  admission_date DATE,
+  discharge_date DATE,
+  hospital_id NUMBER(10)
+);
+
+CREATE TABLE Hospital (
+  hospital_id NUMBER(10) PRIMARY KEY,
+  hospital_name VARCHAR2(50),
+  location VARCHAR2(50)
+);
+
+-- Sample data for the tables
+INSERT INTO Donor VALUES (1, 'Sanjay Sharma', 30, 'A+', TO_DATE('2022-01-01', 'YYYY-MM-DD'));
+INSERT INTO Donor VALUES (2, 'Neha Patel', 21, 'B-', TO_DATE('2022-01-01', 'YYYY-MM-DD'));
+INSERT INTO Donor VALUES (3, 'Rajesh Kumar', 34, 'AB-', TO_DATE('2022-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO Blood_Bank VALUES (1, 'Nashik', 150);
+INSERT INTO Blood_Bank VALUES (2, 'Pune', 200);
+
+INSERT INTO Patient VALUES (1, 'Rajesh Patil', 26, TO_DATE('2024-01-14', 'YYYY-MM-DD'), TO_DATE('2024-01-19', 'YYYY-MM-DD'), 1);
+INSERT INTO Patient VALUES (2, 'Akash Bhosale', 35, TO_DATE('2024-02-15', 'YYYY-MM-DD'), TO_DATE('2024-02-20', 'YYYY-MM-DD'), 2);
+INSERT INTO Patient VALUES (3, 'Nilesh Patel', 50, TO_DATE('2024-01-16', 'YYYY-MM-DD'), TO_DATE('2024-01-18', 'YYYY-MM-DD'), 1);
+
+INSERT INTO Hospital VALUES (1, 'Divya Hospital', 'Nashik');
+INSERT INTO Hospital VALUES (2, 'Life Care Hospital', 'Pune');
+
+a) INSERT
+i) Insert Query with Arithmetic Operators and Functions:
+-- Insert a new donor with calculated age
+
+INSERT INTO donor (Name, Age, Blood_Type)
+VALUES ('Prashant Dasnur’, YEAR(CURRENT_DATE) - YEAR('2002-01-31'), 'O+');
+
+ii) Insert Query with Conversion Function:
+-- Insert a new blood bank with quantity provided as a string and convert it to integer
+
+INSERT INTO blood_bank (Location, Quantity)
+VALUES ('Los Angeles', CAST('500' AS INT));
+
+b) SELECT
+
+iii) Select Query with Logical Operators and Aggregate Function:
+
+-- Select blood banks with more than 100 units of blood in stock and located in New York or Los Angeles
+SELECT * FROM blood_bank
+WHERE Quantity > 100 AND (Location = 'Nashik' OR Location = 'Pune');
+| BloodBank_ID | Location | Quantity |
+|--------------|----------|----------|
+| 1 | Nashik | 150 |
+| 3 | Pune | 200 |
+
+iv) Select Query with Number Function:
+-- Select the average age of donors
+SELECT AVG(Age) AS Average_Age
+FROM donor;
+| Average_Age |
+|-------------|
+| 42.5 |
+
+v) Select Query with Logical Operator:
+-- Select patients from hospitals located in 'Nashik' or 'Pune'
+SELECT * FROM patient
+WHERE Hospital_ID IN (SELECT Hospital_ID FROM hospital WHERE Location IN ('Nashik', 'Pune'));
+| Patient_ID | Patient_Name | Age | Admission_Date | Discharge_Date | Hospital_ID |
+|------------|------------------------|-------|------------------------|-----------------------|-----------------|
+| 1 | Rajesh Patil | 26 | 2024-01-14 | 2024-01-19 | 1 |
+| 2 | Akash Bhosale | 35 | 2024-02-15 | 2024-02-20 | 2 |
+| 3 | Nilesh Patel | 50 | 2024-01-16 | 2024-01-18 | 1 |
+
+c) UPDATE
+vi) Update Query with Comparison Operator and Character Function:
+-- Update the name of a donor with ID 1 to uppercase
+UPDATE donor
+SET Name = UPPER(Name)
+WHERE Donor_ID = 1;
+
+vii) Update Query with Date Function:
+-- Update the last donation date of a donor to the current date
+UPDATE donor
+SET Last_Donation = CURRENT_DATE
+WHERE Donor_ID = 1;
+
+d)DELETE
+viii) DELETE using Aggregate function:
+-- Delete donors whose age is below the average age
+DELETE FROM Donor
+WHERE age < (SELECT AVG(age) FROM Donor);
+
+ix)DELETE using Character function
+-- Delete donors whose names start with the letter 'P'
+DELETE FROM Donor
+WHERE LEFT(donor_name, 1) = 'P';
+
+x) Delete Query with Date Function:
+-- Deleting all patients admitted before a certain date
+DELETE FROM Patient
+WHERE Admission_Date < DATE '2023-01-01';
